@@ -12,6 +12,9 @@ app.listen(port, () => {
 });
 
 //router設定
+var userRouter = require('./controllers/user');
+
+app.use('/user', userRouter);
 
 //db設定
 var pgp = require("pg-promise")(/*options*/);
