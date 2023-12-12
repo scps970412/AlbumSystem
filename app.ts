@@ -21,7 +21,7 @@ var pgp = require("pg-promise")(/*options*/);
 const cn = {
     host: '192.168.1.86',
     port: 5432,
-    database: 'dev',
+    database: 'alnum',
     user: 'postgres',
     password: '860315'
   };
