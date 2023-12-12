@@ -12,18 +12,18 @@ app.listen(port, () => {
 });
 
 //router設定
-var userRouter = require('./controllers/user');
+var userRouter = require("./controllers/userController");
 
-app.use('/user', userRouter);
+app.use("/user", userRouter);
 
 //db設定
 var pgp = require("pg-promise")(/*options*/);
 const cn = {
-    host: '192.168.1.86',
-    port: 5432,
-    database: 'alnum',
-    user: 'postgres',
-    password: '860315'
-  };
+  host: "192.168.1.86",
+  port: 5432,
+  database: "alnum",
+  user: "postgres",
+  password: "860315",
+};
 
-  export const db = pgp(cn);
+export const db = pgp(cn);
