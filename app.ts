@@ -24,7 +24,7 @@ export var pgp = require("pg-promise")(/*options*/);
 export const cn = {
   host: "192.168.1.86",
   port: 5432,
-  database: "album",
+  database: "albumsystem",
   user: "postgres",
   password: "860315",
 };
