@@ -37,6 +37,7 @@ router.post("/add", async function (req: Request, res: Response) {
 
 router.post("/login", async function (req: Request, res: Response) {
   let user: User = req.body;
+  user.password = md5(user.password);
   let isLogin: boolean = await userService.checkLogin(user);
   let result = {
     success: isLogin,
