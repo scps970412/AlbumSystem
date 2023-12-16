@@ -11,16 +11,22 @@ app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
 });
 
+//解析json
+app.use(express.json()); // for parsing application/json
+app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
+
 //router設定
+var userRouter = require("./controllers/userController");
+app.use("/user", userRouter);
 
 //db設定
-var pgp = require("pg-promise")(/*options*/);
-const cn = {
-    host: '192.168.1.86',
-    port: 5432,
-    database: 'dev',
-    user: 'postgres',
-    password: '860315'
-  };
+export var pgp = require("pg-promise")(/*options*/);
+export const cn = {
+  host: "192.168.1.86",
+  port: 5432,
+  database: "album",
+  user: "postgres",
+  password: "860315",
+};
 
-  export const db = pgp(cn);
+export const db = pgp(cn);
