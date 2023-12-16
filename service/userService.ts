@@ -6,7 +6,7 @@ const { ParameterizedQuery: PQ } = require("pg-promise");
 class UserService {
   add(user: User): boolean {
     const addUser = new PQ(
-      "INSERT INTO public.user(userid, password, email) VALUES($1, $2, $3)"
+      "INSERT INTO public.user(userid, password, email, isdelete) VALUES($1, $2, $3, false)"
     );
     addUser.values = [user.userId, user.password, user.email];
     db.none(addUser)
