@@ -13,11 +13,4 @@ router.post("/add", function (req: Request, res: Response, next: any) {
   next();
 });
 
-router.put("/update", function (req: Request, res: Response, next: any) {
-  let user: User = req.body;
-  let isUpdate: boolean = userService.update(user);
-  res.json(isUpdate);
-  next();
-});
-
 module.exports = router;

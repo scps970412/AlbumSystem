@@ -1,3 +1,4 @@
+import internal from "stream";
 import { db } from "./../app";
 import { User } from "./../models/user";
 
@@ -29,6 +30,26 @@ class UserService {
 
     db.none(updateUser)
       .then(() => {
+        return true;
+      })
+      .catch((error: Error) => {
+        //加入log檔
+        console.log(error);
+      });
+    return false;
+  }
+
+  delete(ids: internal[]): boolean {
+    const updateUser = new PQ(
+      `UPDATE public.user SET isdelete = true
+       WHERE id = any($1)`
+    );
+    updateUser.values = [ids];
+
+    db.none(updateUser)
+      .then((result: any) => {
+        console.log(result);
+
         return true;
       })
       .catch((error: Error) => {
