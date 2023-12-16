@@ -2,8 +2,8 @@ import { User } from "./../models/user";
 import { Request, Response } from "express";
 import UserService from "../service/userService";
 import userService from "../service/userService";
-
 var express = require("express");
+const md5 = require("js-md5");
 var router = express.Router();
 
 router.post("/add", async function (req: Request, res: Response) {
@@ -21,6 +21,7 @@ router.post("/add", async function (req: Request, res: Response) {
     if (emailIsExist) {
       reuslt.message = "信箱以存在";
     } else {
+      user.password = md5(user.password);
       let isAdd: boolean = UserService.add(user);
       if (isAdd) {
         reuslt.success = true;
@@ -48,4 +49,5 @@ router.post("/login", async function (req: Request, res: Response) {
   }
   res.json(result);
 });
+
 module.exports = router;
