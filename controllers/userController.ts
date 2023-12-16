@@ -1,35 +1,44 @@
-import { User } from "./../models/user";
+import { User, userValidate } from "./../models/user";
 import { Request, Response } from "express";
-import UserService from "../service/userService";
 import userService from "../service/userService";
+
 var express = require("express");
 const md5 = require("js-md5");
+const { validationResult } = require("express-validator");
 var router = express.Router();
 
-router.post("/add", async function (req: Request, res: Response) {
-  let user: User = req.body;
-  let userIdIsExist: boolean = await userService.checkUserId(user.userId);
+router.post("/add", userValidate, async function (req: Request, res: Response) {
   let reuslt = {
     success: false,
     message: "",
   };
 
-  if (userIdIsExist) {
-    reuslt.message = "帳號以存在";
-  } else {
-    let emailIsExist: boolean = await userService.checkEmail(user.email);
-    if (emailIsExist) {
-      reuslt.message = "信箱以存在";
+  const errors = validationResult(req);
+  if (errors.isEmpty()) {
+    let user: User = req.body;
+    let userIdIsExist: boolean = await userService.checkUserId(user.userId);
+    if (userIdIsExist) {
+      reuslt.message = "帳號以存在";
     } else {
-      user.password = md5(user.password);
-      let isAdd: boolean = UserService.add(user);
-      if (isAdd) {
-        reuslt.success = true;
-        reuslt.message = "註冊成功";
+      let emailIsExist: boolean = await userService.checkEmail(user.email);
+      if (emailIsExist) {
+        reuslt.message = "信箱以存在";
       } else {
-        reuslt.message = "註冊失敗";
+        user.password = md5(user.password);
+        let isAdd: boolean = userService.add(user);
+        if (isAdd) {
+          reuslt.success = true;
+          reuslt.message = "註冊成功";
+        } else {
+          reuslt.message = "註冊失敗";
+        }
       }
     }
+  } else {
+    errors.array().forEach((element: any) => {
+      reuslt.message += element.msg + ",";
+    });
+    reuslt.message = reuslt.message.slice(0, -1);
   }
 
   res.json(reuslt);
