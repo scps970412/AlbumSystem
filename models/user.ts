@@ -24,6 +24,7 @@ export const userValidate = [
     .withMessage("帳號不可超過 20 字元"),
 
   body("email")
+    .optional()
     .notEmpty()
     .withMessage("請輸入信箱")
     .isEmail()

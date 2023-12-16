@@ -35,29 +35,48 @@ router.post("/add", userValidate, async function (req: Request, res: Response) {
       }
     }
   } else {
-    errors.array().forEach((element: any) => {
-      reuslt.message += element.msg + ",";
-    });
-    reuslt.message = reuslt.message.slice(0, -1);
+    reuslt.message = ErrorMessageFormat(errors);
   }
 
   res.json(reuslt);
 });
 
-router.post("/login", async function (req: Request, res: Response) {
-  let user: User = req.body;
-  user.password = md5(user.password);
-  let isLogin: boolean = await userService.checkLogin(user);
-  let result = {
-    success: isLogin,
-    message: "",
-  };
-  if (isLogin) {
-    result.message = "登入成功";
-  } else {
-    result.message = "登入失敗";
+router.post(
+  "/login",
+  userValidate,
+  async function (req: Request, res: Response) {
+    let user: User = req.body;
+
+    const errors = validationResult(req);
+    let reuslt = {
+      success: false,
+      message: "",
+    };
+    if (errors.isEmpty()) {
+      user.password = md5(user.password);
+      let isLogin: boolean = await userService.checkLogin(user);
+
+      if (isLogin) {
+        reuslt.success = true;
+        reuslt.message = "登入成功";
+      } else {
+        reuslt.message = "登入失敗";
+      }
+    } else {
+      reuslt.message = ErrorMessageFormat(errors);
+    }
+
+    res.json(reuslt);
   }
-  res.json(result);
-});
+);
+
+function ErrorMessageFormat(errors: any) {
+  let message = "";
+  errors.array().forEach((element: any) => {
+    message += element.msg + ",";
+  });
+  message = message.slice(0, -1);
+  return message;
+}
 
 module.exports = router;
