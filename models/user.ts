@@ -2,14 +2,14 @@ const { body } = require("express-validator");
 
 export class User {
   id: number;
-  userId: string;
+  account: string;
   email: string;
   password: string;
   isdelete: boolean;
 
   constructor() {
     this.id = 0;
-    this.userId = "";
+    this.account = "";
     this.email = "";
     this.password = "";
     this.isdelete = false;
@@ -17,7 +17,7 @@ export class User {
 }
 
 export const userValidate = [
-  body("userId")
+  body("account")
     .notEmpty()
     .withMessage("請輸入帳號")
     .isLength({ max: 20 })

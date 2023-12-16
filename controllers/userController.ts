@@ -16,8 +16,8 @@ router.post("/add", userValidate, async function (req: Request, res: Response) {
   const errors = validationResult(req);
   if (errors.isEmpty()) {
     let user: User = req.body;
-    let userIdIsExist: boolean = await userService.checkUserId(user.userId);
-    if (userIdIsExist) {
+    let accountIsExist: boolean = await userService.checkAccount(user.account);
+    if (accountIsExist) {
       reuslt.message = "帳號以存在";
     } else {
       let emailIsExist: boolean = await userService.checkEmail(user.email);
