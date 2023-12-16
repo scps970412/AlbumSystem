@@ -61,6 +61,26 @@ class UserService {
       });
     return isExist;
   }
+
+  checkLogin(user: User): boolean {
+    const checkEmail = new PQ(
+      "SELECT count(*) FROM public.user WHERE userid = $1 AND password = $2 AND  isdelete = false"
+    );
+    checkEmail.values = [user.userId, user.password];
+    let isExist = db
+      .oneOrNone(checkEmail)
+      .then((result: any) => {
+        if (result.count > 0) {
+          return true;
+        } else {
+          return false;
+        }
+      })
+      .catch((error: Error) => {
+        console.log(error);
+      });
+    return isExist;
+  }
 }
 
 export default new UserService();

@@ -32,6 +32,20 @@ router.post("/add", async function (req: Request, res: Response) {
   }
 
   res.json(reuslt);
-  });
+});
 
+router.post("/login", async function (req: Request, res: Response) {
+  let user: User = req.body;
+  let isLogin: boolean = await userService.checkLogin(user);
+  let result = {
+    success: isLogin,
+    message: "",
+  };
+  if (isLogin) {
+    result.message = "登入成功";
+  } else {
+    result.message = "登入失敗";
+  }
+  res.json(result);
+});
 module.exports = router;
