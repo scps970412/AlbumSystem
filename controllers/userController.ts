@@ -1,6 +1,6 @@
 import { User, userValidate } from "./../models/user";
 import { Request, Response } from "express";
-import userService from "../service/userService";
+import UserService from "../service/userService";
 
 var express = require("express");
 const md5 = require("js-md5");
@@ -16,16 +16,16 @@ router.post("/add", userValidate, async function (req: Request, res: Response) {
   const errors = validationResult(req);
   if (errors.isEmpty()) {
     let user: User = req.body;
-    let accountIsExist: boolean = await userService.checkAccount(user.account);
+    let accountIsExist: boolean = await UserService.checkAccount(user.account);
     if (accountIsExist) {
       reuslt.message = "帳號以存在";
     } else {
-      let emailIsExist: boolean = await userService.checkEmail(user.email);
+      let emailIsExist: boolean = await UserService.checkEmail(user.email);
       if (emailIsExist) {
         reuslt.message = "信箱以存在";
       } else {
         user.password = md5(user.password);
-        let isAdd: boolean = userService.add(user);
+        let isAdd: boolean = UserService.add(user);
         if (isAdd) {
           reuslt.success = true;
           reuslt.message = "註冊成功";
@@ -54,7 +54,7 @@ router.post(
     };
     if (errors.isEmpty()) {
       user.password = md5(user.password);
-      let isLogin: boolean = await userService.checkLogin(user);
+      let isLogin: boolean = await UserService.checkLogin(user);
 
       if (isLogin) {
         reuslt.success = true;
