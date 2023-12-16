@@ -6,11 +6,32 @@ import userService from "../service/userService";
 var express = require("express");
 var router = express.Router();
 
-router.post("/add", function (req: Request, res: Response, next: any) {
+router.post("/add", async function (req: Request, res: Response) {
   let user: User = req.body;
-  let isAdd: boolean = UserService.add(user);
-  res.json(isAdd);
-  next();
-});
+  let userIdIsExist: boolean = await userService.checkUserId(user.userId);
+  let reuslt = {
+    success: false,
+    message: "",
+  };
+
+  if (userIdIsExist) {
+    reuslt.message = "帳號以存在";
+  } else {
+    let emailIsExist: boolean = await userService.checkEmail(user.email);
+    if (emailIsExist) {
+      reuslt.message = "信箱以存在";
+    } else {
+      let isAdd: boolean = UserService.add(user);
+      if (isAdd) {
+        reuslt.success = true;
+        reuslt.message = "註冊成功";
+      } else {
+        reuslt.message = "註冊失敗";
+      }
+    }
+  }
+
+  res.json(reuslt);
+  });
 
 module.exports = router;

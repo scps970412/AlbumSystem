@@ -1,4 +1,3 @@
-import internal from "stream";
 import { db } from "./../app";
 import { User } from "./../models/user";
 
@@ -10,53 +9,57 @@ class UserService {
       "INSERT INTO public.user(userid, password, email, isdelete) VALUES($1, $2, $3, false)"
     );
     addUser.values = [user.userId, user.password, user.email];
-    db.none(addUser)
+    let isAdd = db
+      .none(addUser)
       .then(() => {
         return true;
       })
       .catch((error: Error) => {
         //加入log檔
+        return false;
         console.log(error);
       });
-    return false;
+    return isAdd;
   }
 
-  update(user: User): boolean {
-    const updateUser = new PQ(
-      `UPDATE public.user SET userid=$2, password=$3, email=$4
-       WHERE id = $1`
+  checkUserId(userId: string): boolean {
+    const checkUserId = new PQ(
+      "SELECT count(*) FROM public.user WHERE userid = $1 AND  isdelete = false"
     );
-    updateUser.values = [user.id, user.userId, user.password, user.email];
-
-    db.none(updateUser)
-      .then(() => {
-        return true;
-      })
-      .catch((error: Error) => {
-        //加入log檔
-        console.log(error);
-      });
-    return false;
-  }
-
-  delete(ids: internal[]): boolean {
-    const updateUser = new PQ(
-      `UPDATE public.user SET isdelete = true
-       WHERE id = any($1)`
-    );
-    updateUser.values = [ids];
-
-    db.none(updateUser)
+    checkUserId.values = [userId];
+    let isExist = db
+      .oneOrNone(checkUserId)
       .then((result: any) => {
-        console.log(result);
-
-        return true;
+        if (result.count > 0) {
+          return true;
+        } else {
+          return false;
+        }
       })
       .catch((error: Error) => {
-        //加入log檔
         console.log(error);
       });
-    return false;
+    return isExist;
+  }
+
+  checkEmail(email: string): boolean {
+    const checkEmail = new PQ(
+      "SELECT count(*) FROM public.user WHERE email = $1 AND  isdelete = false"
+    );
+    checkEmail.values = [email];
+    let isExist = db
+      .oneOrNone(checkEmail)
+      .then((result: any) => {
+        if (result.count > 0) {
+          return true;
+        } else {
+          return false;
+        }
+      })
+      .catch((error: Error) => {
+        console.log(error);
+      });
+    return isExist;
   }
 }
 
