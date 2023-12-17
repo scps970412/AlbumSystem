@@ -69,3 +69,5 @@ router.post("/Delete", async function (req: any, res: Response) {
   }
   res.json(reuslt);
 });
+
+module.exports = router;
