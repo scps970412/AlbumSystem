@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
 
 const app = express();
+var router = express.Router();
 const port = process.env.PORT || 3000;
 
 app.get("/", (req: Request, res: Response) => {
@@ -17,7 +18,12 @@ app.use(express.urlencoded({ extended: true })); // for parsing application/x-ww
 
 //router設定
 var userRouter = require("./controllers/userController");
+var albumRouter = require("./controllers/albumController");
+
 app.use("/user", userRouter);
+app.use("/album", albumRouter);
+
+module.exports = router;
 
 //db設定
 export var pgp = require("pg-promise")(/*options*/);
