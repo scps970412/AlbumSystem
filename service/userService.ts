@@ -62,24 +62,20 @@ class UserService {
     return isExist;
   }
 
-  checkLogin(user: User): boolean {
+  checkLogin(user: User): User {
     const checkEmail = new PQ(
-      "SELECT count(*) FROM public.user WHERE account = $1 AND password = $2 AND  isdelete = false"
+      "SELECT id FROM public.user WHERE account = $1 AND password = $2 AND  isdelete = false"
     );
     checkEmail.values = [user.account, user.password];
-    let isExist = db
+    let userResult = db
       .oneOrNone(checkEmail)
       .then((result: any) => {
-        if (result.count > 0) {
-          return true;
-        } else {
-          return false;
-        }
+        return result;
       })
       .catch((error: Error) => {
         console.log(error);
       });
-    return isExist;
+    return userResult;
   }
 }
 

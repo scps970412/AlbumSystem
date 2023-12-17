@@ -52,10 +52,10 @@ router.post("/login", userValidate, async function (req: any, res: Response) {
   };
   if (errors.isEmpty()) {
     user.password = md5(user.password);
-    let isLogin: boolean = await UserService.checkLogin(user);
+    let loginUser: User = await UserService.checkLogin(user);
 
-    if (isLogin) {
-      req.session.user = { id: 0, account: "" };
+    if (loginUser != null) {
+      req.session.user = { id: loginUser.id, account: loginUser.account };
       reuslt.success = true;
       reuslt.message = "登入成功";
     } else {
