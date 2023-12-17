@@ -27,7 +27,7 @@ var userRouter = require("./controllers/userController");
 var albumRouter = require("./controllers/albumController");
 
 app.use("/user", userRouter);
-app.use("/album", albumRouter);
+//app.use("/album", albumRouter);
 
 module.exports = router;
 
