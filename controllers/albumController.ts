@@ -13,9 +13,8 @@ router.post("/add", async function (req: any, res: Response) {
 
   let album: Album = req.body;
   album.userId = req.session.user.id;
-  console.log(album);
   let dbAlbum: Album = await AlbumService.checkTitle(album);
-  if (dbAlbum === null) {
+  if (dbAlbum != null) {
     reuslt.message = "資料夾名稱以重複";
     res.json(reuslt);
     return;
