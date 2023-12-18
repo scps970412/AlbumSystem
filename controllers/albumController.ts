@@ -54,7 +54,7 @@ router.post("/update", async function (req: any, res: Response) {
     res.json(reuslt);
     return;
   }
-  
+
   dbAlbum = await albumService.getById(album);
   let isUpdate: boolean = await AlbumService.update(album);
   reuslt.success = isUpdate;
@@ -76,9 +76,17 @@ router.post("/delete", async function (req: any, res: Response) {
   };
 
   let album: Album = req.body;
+  album = await albumService.getById(album);
   let isDelete: boolean = await AlbumService.delete(album);
   reuslt.success = isDelete;
   if (isDelete) {
+    let filePath = path.join(
+      cwd(),
+      "user",
+      req.session.user.account,
+      album.title
+    );
+    File.deleteDir(filePath);
     reuslt.message = "刪除成功";
   } else {
     reuslt.message = "刪除失敗";

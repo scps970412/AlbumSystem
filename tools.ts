@@ -112,7 +112,7 @@ class File {
     if (temp.length == 2) {
       return temp[1];
     } else {
-      return '';
+      return "";
     }
   }
 }

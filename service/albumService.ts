@@ -85,14 +85,16 @@ class AlbumService {
   }
 
   getById(album: Album): Album {
-    const checkTitle = new PQ(
-      `SELECT * FROM public.album 
+    const pq = new PQ(
+      `SELECT * FROM public.album
        WHERE id = $1`
     );
-    checkTitle.values = [album.id];
+    pq.values = [album.id];
     let dbAlbum = db
-      .oneOrNone(checkTitle)
+      .oneOrNone(pq)
       .then((result: any) => {
+        console.log(result);
+
         return result;
       })
       .catch((error: Error) => {
