@@ -3,6 +3,7 @@ import { Response } from "express";
 import AlbumService from "../service/albumService";
 import File from "../tools";
 import { cwd } from "node:process";
+import albumService from "../service/albumService";
 
 var express = require("express");
 const path = require("path");
@@ -25,10 +26,10 @@ router.post("/add", async function (req: any, res: Response) {
 
   let isAdd: boolean = await AlbumService.add(album);
   reuslt.success = isAdd;
-  if (isAdd) {  
+  if (isAdd) {
     let filePath = path.join(cwd(), "user", req.session.user.account);
     File.createFolder(filePath, album.title);
-    
+
     reuslt.message = "新增成功";
   } else {
     reuslt.message = "新增失敗";
@@ -47,15 +48,20 @@ router.post("/update", async function (req: any, res: Response) {
   album.userId = req.session.user.id;
 
   let dbAlbum: Album = await AlbumService.checkTitle(album);
+
   if (dbAlbum !== null) {
     reuslt.message = "資料夾名稱已重複";
     res.json(reuslt);
     return;
   }
-
+  
+  dbAlbum = await albumService.getById(album);
   let isUpdate: boolean = await AlbumService.update(album);
   reuslt.success = isUpdate;
   if (isUpdate) {
+    let filePath = path.join(cwd(), "user", req.session.user.account);
+    File.rename(filePath, dbAlbum.title, album.title);
+
     reuslt.message = "修改成功";
   } else {
     reuslt.message = "修改失敗";
