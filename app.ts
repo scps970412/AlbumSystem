@@ -1,9 +1,12 @@
 import express, { Request, Response } from "express";
-
+import File from "./tools";
 const app = express();
 var router = express.Router();
 const port = process.env.PORT || 3000;
 const session = require("express-session");
+
+//第一次執行必須要再跟目錄創建user資料夾，用於存放個使用者相簿
+File.createFolder(".","./user");
 
 //express-session
 app.use(
