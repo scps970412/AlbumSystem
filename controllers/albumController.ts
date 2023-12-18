@@ -1,8 +1,11 @@
 import { Album } from "./../models/album";
 import { Response } from "express";
 import AlbumService from "../service/albumService";
+import File from "../tools";
+import { cwd } from "node:process";
 
 var express = require("express");
+const path = require("path");
 var router = express.Router();
 
 router.post("/add", async function (req: any, res: Response) {
@@ -22,7 +25,10 @@ router.post("/add", async function (req: any, res: Response) {
 
   let isAdd: boolean = await AlbumService.add(album);
   reuslt.success = isAdd;
-  if (isAdd) {
+  if (isAdd) {  
+    let filePath = path.join(cwd(), "user", req.session.user.account);
+    File.createFolder(filePath, album.title);
+    
     reuslt.message = "新增成功";
   } else {
     reuslt.message = "新增失敗";
