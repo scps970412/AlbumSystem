@@ -2,11 +2,14 @@ import { User, userValidate } from "./../models/user";
 import { Request, Response } from "express";
 import UserService from "../service/userService";
 import File from "../tools";
+import { cwd } from 'node:process';
+
 var express = require("express");
 const md5 = require("js-md5");
 const { validationResult } = require("express-validator");
 var session = require("express-session");
 var router = express.Router();
+const path = require('path');
 
 router.post("/add", userValidate, async function (req: Request, res: Response) {
   let reuslt = {
@@ -28,7 +31,8 @@ router.post("/add", userValidate, async function (req: Request, res: Response) {
         user.password = md5(user.password);
         let isAdd: boolean = UserService.add(user);
         if (isAdd) {
-          File.createFolder("../user", `${user.account}`);
+
+          File.createFolder(path.join(cwd(),'user'), `${user.account}`);
           reuslt.success = true;
           reuslt.message = "註冊成功";
         } else {

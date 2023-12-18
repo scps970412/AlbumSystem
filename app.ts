@@ -6,7 +6,7 @@ const port = process.env.PORT || 3000;
 const session = require("express-session");
 
 //第一次執行必須要再跟目錄創建user資料夾，用於存放個使用者相簿
-File.createFolder(".","./user");
+File.createFolder(__dirname,"./user");
 
 //express-session
 app.use(
