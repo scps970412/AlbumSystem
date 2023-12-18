@@ -83,6 +83,25 @@ class AlbumService {
       });
     return dbAlbum;
   }
+
+  getById(album: Album): Album {
+    const pq = new PQ(
+      `SELECT * FROM public.album
+       WHERE id = $1`
+    );
+    pq.values = [album.id];
+    let dbAlbum = db
+      .oneOrNone(pq)
+      .then((result: any) => {
+        console.log(result);
+
+        return result;
+      })
+      .catch((error: Error) => {
+        console.log(error);
+      });
+    return dbAlbum;
+  }
 }
 
 export default new AlbumService();

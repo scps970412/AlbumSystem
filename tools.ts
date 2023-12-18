@@ -1,6 +1,6 @@
 import fs from "fs";
 import fsPromises = fs.promises;
-
+const path = require("path");
 class File {
   /**
    * 检查文件是否存在。
@@ -13,15 +13,18 @@ class File {
 
   /**
    * 新增資料夾
-   * @param path 文件路径。
+   * @param filePath 文件路径。
    * @param folderName 資料夾名稱。
    * @returns 成功則返回 true，否则返回 false。
    */
-  createFolder(path: string, folderName: string): boolean {
-    if (this.isExist(path) && !this.isExist(`${path}/${folderName}`)) {
-      fs.mkdir(`${path}/${folderName}`, (err) => {
+  createFolder(filePath: string, folderName: string): boolean {
+    if (
+      this.isExist(filePath) &&
+      !this.isExist(path.join(filePath, folderName))
+    ) {
+      fs.mkdir(path.join(filePath, folderName), (err) => {
         if (err != null) {
-            console.log(err);
+          console.log(err);
         }
       });
       return true;
@@ -32,13 +35,13 @@ class File {
 
   /**
    * 檔案重新命名
-   * @param path 文件路径。
+   * @param filePath 文件路径。
    * @param fileName 欲變更檔案名稱。
    * @param newFileName 變更後檔案名稱。
    * @returns 成功則返回 true，否则返回 false。
    */
-  rename(path: string, fileName: string, newFileName: string): boolean {
-    let isExist: Boolean = this.isExist(`${path}/${fileName}`);
+  rename(filePath: string, fileName: string, newFileName: string): boolean {
+    let isExist: Boolean = this.isExist(path.join(filePath, fileName));
     if (!isExist) {
       console.log("欲變更檔案或目錄不存在");
       return false;
@@ -52,17 +55,21 @@ class File {
       return false;
     }
 
-    isExist = this.isExist(`${path}/${newFileName}`);
+    isExist = this.isExist(path.join(filePath, newFileName));
     if (isExist) {
       console.log("新名稱已重複");
       return false;
     }
 
-    fs.rename(`${path}/${fileName}`, `${path}/${newFileName}`, (err) => {
-      if (err != null) {
-        console.log(err);
+    fs.rename(
+      path.join(filePath, fileName),
+      path.join(filePath, newFileName),
+      (err) => {
+        if (err != null) {
+          console.log(err);
+        }
       }
-    });
+    );
 
     return true;
   }
@@ -87,13 +94,13 @@ class File {
 
   /**
    * 刪除檔案
-   * @param path 檔案目錄。
+   * @param filePath 檔案目錄。
    * @param fileName 檔案名稱。
    * @returns 成功則返回 true，檔案或路徑不存在返回 false。
    */
-  deleteFile(path: string, fileName: string) {
-    if (this.isExist(`${path}/${fileName}`)) {
-      fs.unlinkSync(`${path}/${fileName}`);
+  deleteFile(filePath: string, fileName: string) {
+    if (this.isExist(path.join(filePath, fileName))) {
+      fs.unlinkSync(path.join(filePath, fileName));
       return true;
     } else {
       return false;
@@ -105,7 +112,7 @@ class File {
     if (temp.length == 2) {
       return temp[1];
     } else {
-      return temp[0];
+      return "";
     }
   }
 }
