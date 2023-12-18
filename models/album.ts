@@ -1,11 +1,11 @@
 export class Album {
   id: number;
-  userId: string;
+  userId: number;
   title: string;
 
   constructor() {
     this.id = 0;
-    this.userId = "";
+    this.userId = 0;
     this.title = "";
   }
 }

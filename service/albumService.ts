@@ -32,7 +32,11 @@ class AlbumService {
     let isUpdate: boolean = db
       .result(updateAlbum)
       .then((result: any) => {
-        return true;
+        if (result.rowCount > 0) {
+          return true;
+        } else {
+          return false;
+        }
       })
       .catch((error: Error) => {
         console.log(error);
@@ -50,7 +54,11 @@ class AlbumService {
     let isDelete: boolean = db
       .result(deleteAlbum)
       .then((result: any) => {
-        return true;
+        if (result.rowCount > 0) {
+          return true;
+        } else {
+          return false;
+        }
       })
       .catch((error: Error) => {
         console.log(error);
@@ -59,25 +67,21 @@ class AlbumService {
     return isDelete;
   }
 
-  checkTitle(album: Album): boolean {
+  checkTitle(album: Album): Album {
     const checkTitle = new PQ(
-      `SELECT count(*) FROM public.album 
+      `SELECT * FROM public.album 
        WHERE userid = $1 AND title = $2`
     );
     checkTitle.values = [album.userId, album.title];
-    let isExist = db
+    let dbAlbum = db
       .oneOrNone(checkTitle)
       .then((result: any) => {
-        if (result.count > 0) {
-          return true;
-        } else {
-          return false;
-        }
+        return result;
       })
       .catch((error: Error) => {
         console.log(error);
       });
-    return isExist;
+    return dbAlbum;
   }
 }
 
