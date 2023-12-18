@@ -17,16 +17,17 @@ class File {
    * @param folderName 資料夾名稱。
    * @returns 成功則返回 true，否则返回 false。
    */
-  async createFolder(path: string, folderName: string): Promise<boolean> {
-    let isCreate = await fsPromises
-      .mkdir(`${path}/${folderName}`)
-      .then(function () {
-        return true;
-      })
-      .catch(function () {
-        return false;
+  createFolder(path: string, folderName: string): boolean {
+    if (this.isExist(path) && !this.isExist(`${path}/${folderName}`)) {
+      fs.mkdir(`${path}/${folderName}`, (err) => {
+        if (err != null) {
+            console.log(err);
+        }
       });
-    return isCreate;
+      return true;
+    } else {
+      return false;
+    }
   }
 
   /**
