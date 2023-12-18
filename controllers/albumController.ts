@@ -13,10 +13,12 @@ router.post("/add", async function (req: any, res: Response) {
 
   let album: Album = req.body;
   album.userId = req.session.user.id;
-  let titleIsExist: boolean = await AlbumService.checkTitle(album);
-  if (!titleIsExist) {
+  console.log(album);
+  let dbAlbum: Album = await AlbumService.checkTitle(album);
+  if (dbAlbum === null) {
     reuslt.message = "資料夾名稱以重複";
     res.json(reuslt);
+    return;
   }
 
   let isAdd: boolean = await AlbumService.add(album);
@@ -26,10 +28,11 @@ router.post("/add", async function (req: any, res: Response) {
   } else {
     reuslt.message = "新增失敗";
   }
+
   res.json(reuslt);
 });
 
-router.post("/Update", async function (req: any, res: Response) {
+router.post("/update", async function (req: any, res: Response) {
   let reuslt = {
     success: false,
     message: "",
@@ -37,10 +40,12 @@ router.post("/Update", async function (req: any, res: Response) {
 
   let album: Album = req.body;
   album.userId = req.session.user.id;
-  let titleIsExist: boolean = await AlbumService.checkTitle(album);
-  if (!titleIsExist) {
-    reuslt.message = "資料夾名稱以重複";
+
+  let dbAlbum: Album = await AlbumService.checkTitle(album);
+  if (dbAlbum !== null) {
+    reuslt.message = "資料夾名稱已重複";
     res.json(reuslt);
+    return;
   }
 
   let isUpdate: boolean = await AlbumService.update(album);
@@ -53,7 +58,7 @@ router.post("/Update", async function (req: any, res: Response) {
   res.json(reuslt);
 });
 
-router.post("/Delete", async function (req: any, res: Response) {
+router.post("/delete", async function (req: any, res: Response) {
   let reuslt = {
     success: false,
     message: "",
