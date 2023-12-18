@@ -1,7 +1,7 @@
 import { User, userValidate } from "./../models/user";
 import { Request, Response } from "express";
 import UserService from "../service/userService";
-
+import File from "../tools";
 var express = require("express");
 const md5 = require("js-md5");
 const { validationResult } = require("express-validator");
@@ -15,7 +15,7 @@ router.post("/add", userValidate, async function (req: Request, res: Response) {
   };
 
   const errors = validationResult(req);
-  if (!errors.isEmpty()) {
+  if (errors.isEmpty()) {
     let user: User = req.body;
     let accountIsExist: boolean = await UserService.checkAccount(user.account);
     if (accountIsExist) {
@@ -28,6 +28,7 @@ router.post("/add", userValidate, async function (req: Request, res: Response) {
         user.password = md5(user.password);
         let isAdd: boolean = UserService.add(user);
         if (isAdd) {
+          File.createFolder("../user", `${user.account}`);
           reuslt.success = true;
           reuslt.message = "註冊成功";
         } else {
