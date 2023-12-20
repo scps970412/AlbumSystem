@@ -107,6 +107,17 @@ class File {
     }
   }
 
+  /**
+   * 複製檔案
+   * @param filePath 欲複製檔案
+   * @param toFilePath 新檔案路徑
+   */
+  copyFile(filePath: string, toFilePath: string) {
+    fs.copyFile(filePath, toFilePath, fs.constants.COPYFILE_EXCL, (err) => {
+      console.log(err);
+    });
+  }
+
   getFilenameExtension(fileName: string): string {
     let temp: string[] = fileName.split(".");
     if (temp.length == 2) {
