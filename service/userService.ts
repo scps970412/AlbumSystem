@@ -64,7 +64,7 @@ class UserService {
 
   checkLogin(user: User): User {
     const checkEmail = new PQ(
-      "SELECT id FROM public.user WHERE account = $1 AND password = $2 AND  isdelete = false"
+      "SELECT id, account FROM public.user WHERE account = $1 AND password = $2 AND  isdelete = false"
     );
     checkEmail.values = [user.account, user.password];
     let userResult = db

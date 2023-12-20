@@ -60,7 +60,7 @@ router.post("/login", userValidate, async function (req: any, res: Response) {
     let loginUser: User = await UserService.checkLogin(user);
 
     if (loginUser != null) {
-      req.session.user = { id: loginUser.id, account: user.account };
+      req.session.user = loginUser;
       reuslt.success = true;
       reuslt.message = "登入成功";
     } else {
