@@ -1,17 +1,18 @@
 export class Photo {
   id: number;
-  albumId: number;
-  fileName: string;
-  descripthion: string;
+  albumid: number;
+  filename: string;
+  description: string;
   constructor(
-    id:number=0,
-    albumId: number = 0,
-    fileName: string = "",
+    id: number = 0,
+    albumid: number = 0,
+    filename: string = "",
     descripthion: string = ""
   ) {
     this.id = id;
-    this.albumId = albumId;
-    this.fileName = fileName;
-    this.descripthion = descripthion;
+    this.albumid = albumid;
+    this.filename = filename;
+    this.description = descripthion;
   }
 }
+export default Photo;
