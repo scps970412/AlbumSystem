@@ -121,7 +121,7 @@ class File {
   getFilenameExtension(fileName: string): string {
     let temp: string[] = fileName.split(".");
     if (temp.length == 2) {
-      return temp[1];
+      return `.${temp[1]}`;
     } else {
       return "";
     }
