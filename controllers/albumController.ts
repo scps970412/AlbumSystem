@@ -35,7 +35,7 @@ router.post("/add", async function (req: any, res: Response) {
     reuslt.message = "新增失敗";
   }
 
-  res.json(reuslt);
+  res.status(200).json(reuslt);
 });
 
 router.post("/update", async function (req: any, res: Response) {
@@ -66,7 +66,7 @@ router.post("/update", async function (req: any, res: Response) {
   } else {
     reuslt.message = "修改失敗";
   }
-  res.json(reuslt);
+  res.status(200).json(reuslt);
 });
 
 router.post("/delete", async function (req: any, res: Response) {
@@ -92,7 +92,7 @@ router.post("/delete", async function (req: any, res: Response) {
   } else {
     reuslt.message = "刪除失敗";
   }
-  res.json(reuslt);
+  res.status(200).json(reuslt);
 });
 
 module.exports = router;
