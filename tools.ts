@@ -107,10 +107,28 @@ class File {
     }
   }
 
+  /**
+   * 複製檔案
+   * @param filePath 欲複製檔案
+   * @param toFilePath 新檔案路徑
+   */
+  copyFile(filePath: string, toFilePath: string) {
+    fs.copyFile(filePath, toFilePath, fs.constants.COPYFILE_EXCL, (err) => {
+      console.log(err);
+    });
+  }
+
+  // fileToByteArray(filePath: string, fileName: string) {
+  //   readFile('/etc/passwd', (err, data) => {
+  //     if (err) throw err;
+  //     console.log(data);
+  //   }); 
+  // }
+
   getFilenameExtension(fileName: string): string {
     let temp: string[] = fileName.split(".");
     if (temp.length == 2) {
-      return temp[1];
+      return `.${temp[1]}`;
     } else {
       return "";
     }

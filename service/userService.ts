@@ -1,15 +1,15 @@
 import { db } from "./../app";
-import { User } from "./../models/user";
+import User from "./../models/user";
 
 const { ParameterizedQuery: PQ } = require("pg-promise");
 
 class UserService {
-  add(user: User): boolean {
+  async add(user: User): Promise<boolean> {
     const addUser = new PQ(
       "INSERT INTO public.user(account, password, email, isdelete) VALUES($1, $2, $3, false)"
     );
     addUser.values = [user.account, user.password, user.email];
-    let isAdd = db
+    let isAdd = await db
       .none(addUser)
       .then(() => {
         return true;
@@ -22,12 +22,12 @@ class UserService {
     return isAdd;
   }
 
-  checkAccount(account: string): boolean {
+  async checkAccount(account: string): Promise<boolean> {
     const checkAccount = new PQ(
       "SELECT count(*) FROM public.user WHERE account = $1 AND  isdelete = false"
     );
     checkAccount.values = [account];
-    let isExist = db
+    let isExist = await db
       .oneOrNone(checkAccount)
       .then((result: any) => {
         if (result.count > 0) {
@@ -42,12 +42,12 @@ class UserService {
     return isExist;
   }
 
-  checkEmail(email: string): boolean {
+  async checkEmail(email: string): Promise<boolean> {
     const checkEmail = new PQ(
       "SELECT count(*) FROM public.user WHERE email = $1 AND  isdelete = false"
     );
     checkEmail.values = [email];
-    let isExist = db
+    let isExist = await db
       .oneOrNone(checkEmail)
       .then((result: any) => {
         if (result.count > 0) {
@@ -62,12 +62,12 @@ class UserService {
     return isExist;
   }
 
-  checkLogin(user: User): User {
+  async checkLogin(user: User): Promise<User> {
     const checkEmail = new PQ(
-      "SELECT id FROM public.user WHERE account = $1 AND password = $2 AND  isdelete = false"
+      "SELECT id, account FROM public.user WHERE account = $1 AND password = $2 AND  isdelete = false"
     );
     checkEmail.values = [user.account, user.password];
-    let userResult = db
+    let userResult = await db
       .oneOrNone(checkEmail)
       .then((result: any) => {
         return result;
