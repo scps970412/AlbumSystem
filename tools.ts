@@ -118,6 +118,13 @@ class File {
     });
   }
 
+  // fileToByteArray(filePath: string, fileName: string) {
+  //   readFile('/etc/passwd', (err, data) => {
+  //     if (err) throw err;
+  //     console.log(data);
+  //   }); 
+  // }
+
   getFilenameExtension(fileName: string): string {
     let temp: string[] = fileName.split(".");
     if (temp.length == 2) {
