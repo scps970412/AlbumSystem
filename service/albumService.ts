@@ -1,15 +1,15 @@
 import { db } from "./../app";
-import { Album } from "./../models/album";
+import Album from "./../models/album";
 
 const { ParameterizedQuery: PQ } = require("pg-promise");
 
 class AlbumService {
-  add(album: Album): boolean {
+  async add(album: Album): Promise<boolean> {
     const addAlbum = new PQ(
       "INSERT INTO public.album(userid, title) VALUES($1, $2)"
     );
-    addAlbum.values = [album.userId, album.title];
-    let isAdd = db
+    addAlbum.values = [album.userid, album.title];
+    let isAdd = await db
       .none(addAlbum)
       .then(() => {
         return true;
@@ -22,14 +22,14 @@ class AlbumService {
     return isAdd;
   }
 
-  update(album: Album): boolean {
+  async update(album: Album): Promise<boolean> {
     const updateAlbum = new PQ(
       `UPDATE public.album
        SET  title=$2
        WHERE id = $1;`
     );
     updateAlbum.values = [album.id, album.title];
-    let isUpdate: boolean = db
+    let isUpdate: boolean = await db
       .result(updateAlbum)
       .then((result: any) => {
         if (result.rowCount > 0) {
@@ -45,13 +45,13 @@ class AlbumService {
     return isUpdate;
   }
 
-  delete(album: Album): boolean {
+  async delete(album: Album): Promise<boolean> {
     const deleteAlbum = new PQ(
       `DELETE FROM public.album
         WHERE id = $1;`
     );
     deleteAlbum.values = [album.id];
-    let isDelete: boolean = db
+    let isDelete: boolean = await db
       .result(deleteAlbum)
       .then((result: any) => {
         if (result.rowCount > 0) {
@@ -67,13 +67,13 @@ class AlbumService {
     return isDelete;
   }
 
-  checkTitle(album: Album): Album {
+  async checkTitle(album: Album): Promise<Album> {
     const checkTitle = new PQ(
       `SELECT * FROM public.album 
        WHERE userid = $1 AND title = $2`
     );
-    checkTitle.values = [album.userId, album.title];
-    let dbAlbum = db
+    checkTitle.values = [album.userid, album.title];
+    let dbAlbum = await db
       .oneOrNone(checkTitle)
       .then((result: any) => {
         return result;
@@ -84,22 +84,22 @@ class AlbumService {
     return dbAlbum;
   }
 
-  getById(album: Album): Album {
+  async getById(id: number): Promise<Album> {
     const pq = new PQ(
-      `SELECT * FROM public.album
+      `SELECT id, userid, title FROM public.album
        WHERE id = $1`
     );
-    pq.values = [album.id];
-    let dbAlbum = db
+    pq.values = [id];
+    let dbAlbum = await db
       .oneOrNone(pq)
       .then((result: any) => {
-        console.log(result);
-
         return result;
       })
       .catch((error: Error) => {
         console.log(error);
       });
+    console.log(dbAlbum);
+
     return dbAlbum;
   }
 }

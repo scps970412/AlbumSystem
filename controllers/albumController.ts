@@ -1,9 +1,9 @@
-import { Album } from "./../models/album";
 import { Response } from "express";
-import AlbumService from "../service/albumService";
 import File from "../tools";
 import { cwd } from "node:process";
-import albumService from "../service/albumService";
+import Album from "./../models/album";
+import AlbumService from "../service/albumService";
+import PhotoService from "../service/photoService";
 
 var express = require("express");
 const path = require("path");
@@ -16,7 +16,7 @@ router.post("/add", async function (req: any, res: Response) {
   };
 
   let album: Album = req.body;
-  album.userId = req.session.user.id;
+  album.userid = req.session.user.id;
   let dbAlbum: Album = await AlbumService.checkTitle(album);
   if (dbAlbum != null) {
     reuslt.message = "資料夾名稱以重複";
@@ -45,7 +45,7 @@ router.post("/update", async function (req: any, res: Response) {
   };
 
   let album: Album = req.body;
-  album.userId = req.session.user.id;
+  album.userid = req.session.user.id;
 
   let dbAlbum: Album = await AlbumService.checkTitle(album);
 
@@ -55,7 +55,7 @@ router.post("/update", async function (req: any, res: Response) {
     return;
   }
 
-  dbAlbum = await albumService.getById(album);
+  dbAlbum = await AlbumService.getById(album.id);
   let isUpdate: boolean = await AlbumService.update(album);
   reuslt.success = isUpdate;
   if (isUpdate) {
@@ -76,7 +76,8 @@ router.post("/delete", async function (req: any, res: Response) {
   };
 
   let album: Album = req.body;
-  album = await albumService.getById(album);
+  album = await AlbumService.getById(album.id);
+  await PhotoService.deleteByAlbumId(album.id);
   let isDelete: boolean = await AlbumService.delete(album);
   reuslt.success = isDelete;
   if (isDelete) {

@@ -15,6 +15,7 @@ export class User {
     this.isdelete = false;
   }
 }
+export default User;
 
 export const userValidate = [
   body("account")
