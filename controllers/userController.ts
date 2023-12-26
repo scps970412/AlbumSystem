@@ -42,7 +42,7 @@ router.post("/add", userValidate, async function (req: Request, res: Response) {
     reuslt.message = ErrorMessageFormat(errors);
   }
 
-  res.json(reuslt);
+  res.status(200).json(reuslt);
 });
 
 router.post("/login", userValidate, async function (req: any, res: Response) {
@@ -68,7 +68,7 @@ router.post("/login", userValidate, async function (req: any, res: Response) {
     reuslt.message = ErrorMessageFormat(errors);
   }
 
-  res.json(reuslt);
+  res.status(200).json(reuslt);
 });
 
 function ErrorMessageFormat(errors: any) {
